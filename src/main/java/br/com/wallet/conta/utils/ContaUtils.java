@@ -1,7 +1,7 @@
 package br.com.wallet.conta.utils;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
 public class ContaUtils {
 
@@ -9,13 +9,9 @@ public class ContaUtils {
 
     }
 
-    public static String gerarNumeroConta(int tamanho) throws NoSuchAlgorithmException {
-        String conta = "";
-        SecureRandom secureRandom = SecureRandom.getInstance("NativePRNG");
+    public static String gerarNumeroAleatorio(int tamanho) throws NoSuchAlgorithmException {
+        LocalDateTime now = LocalDateTime.now();
 
-        for (int i = 0; i <= tamanho; i++) {
-            conta += secureRandom.nextInt();
-        }
-        return conta;
+        return now.toString().substring(0, tamanho);
     }
 }
