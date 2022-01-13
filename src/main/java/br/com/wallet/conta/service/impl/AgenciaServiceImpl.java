@@ -24,7 +24,6 @@ public class AgenciaServiceImpl implements AgenciaService {
     public AgenciaResponse criarAgencia(AgenciaRequest agenciaRequest) throws NoSuchAlgorithmException {
         AgenciaEntity agencia = this.mapper.paraEntity(agenciaRequest);
 
-        agencia.setNumeroAgencia(ContaUtils.gerarNumeroAleatorio(4));
         this.repository.save(agencia);
         return this.mapper.paraResponse(agencia);
     }

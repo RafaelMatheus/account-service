@@ -26,11 +26,8 @@ public class ContaServiceImpl implements ContaService {
 
     @Override
     public ContaResponse criarConta(ContaRequest contaRequest) throws NoSuchAlgorithmException, JsonProcessingException {
-        String conta = ContaUtils.gerarNumeroAleatorio(5);
 
         ContaEntity contaMapper = this.mapper.paraContaEntity(contaRequest);
-
-        contaMapper.setNumeroConta(conta);
 
         ContaEntity salvo = this.repository.save(contaMapper);
 
