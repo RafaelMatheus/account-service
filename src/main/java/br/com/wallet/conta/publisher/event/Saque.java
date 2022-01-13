@@ -3,14 +3,12 @@ package br.com.wallet.conta.publisher.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Saque extends TransacaoEvent {
-    private BigDecimal valorDebitado;
     private String terminal;
 }

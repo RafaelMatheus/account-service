@@ -1,6 +1,5 @@
 package br.com.wallet.conta.service.impl;
 
-import br.com.wallet.conta.entity.conta.ContaResponse;
 import br.com.wallet.conta.entity.enums.TipoTransacao;
 import br.com.wallet.conta.entity.transacao.TransacaoRequest;
 import br.com.wallet.conta.publisher.RabbitMqPublisher;
@@ -12,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 @Slf4j
@@ -23,29 +22,42 @@ public class TransacaoServiceImpl implements TransacaoService {
 
     @Override
     public void realizarTransacao(TransacaoRequest transacaoRequest) throws JsonProcessingException {
-        ContaResponse contaResponse = this.service.buscarContaPorId(transacaoRequest.getIdContaOrigem());
+        this.service.buscarContaPorId(transacaoRequest.getIdContaOrigem());
 
-        this.publisher.enviarRabbitMQ(this.transacaoEventFactory(transacaoRequest, contaResponse));
+        this.publisher.enviarRabbitMQ(this.transacaoEventFactory(transacaoRequest));
     }
 
-    private TransacaoEvent transacaoEventFactory(TransacaoRequest transacaoRequest, ContaResponse contaResponse) {
+    private TransacaoEvent transacaoEventFactory(TransacaoRequest transacaoRequest) {
         if (transacaoRequest.getTipoTransacao().equals(TipoTransacao.SAQUE)) {
             return Saque.builder()
                     .tipoTransacao(transacaoRequest.getTipoTransacao())
                     .contaOrigem(transacaoRequest.getIdContaDestino())
                     .valorDebitado(transacaoRequest.getValorTransacao())
+                    .terminal("TERMINAL PICPAY")
+                    .timestamp(OffsetDateTime.now())
                     .build();
         } else if (transacaoRequest.getTipoTransacao().equals(TipoTransacao.TRANSFERENCIA)) {
             return Transferencia.builder()
                     .tipoTransacao(TipoTransacao.TRANSFERENCIA)
-                    .valorDebitado(transacaoRequest.getValorTransacao()).build();
+                    .valorDebitado(transacaoRequest.getValorTransacao())
+                    .contaDestino(transacaoRequest.getIdContaDestino())
+                    .contaOrigem(transacaoRequest.getIdContaOrigem())
+                    .timestamp(OffsetDateTime.now())
+                    .build();
         } else if (transacaoRequest.getTipoTransacao().equals(TipoTransacao.DEPOSITO)) {
-            Deposito.builder().build();
+            return Deposito.builder()
+                    .tipoTransacao(TipoTransacao.DEPOSITO)
+                    .valorDebitado(transacaoRequest.getValorTransacao())
+                    .contaOrigem(transacaoRequest.getIdContaOrigem())
+                    .timestamp(OffsetDateTime.now())
+                    .build();
+
         }
         return Recebimento.builder()
-                .valorDebitado(transacaoRequest.getValorTransacao())
+                .valorCreditado(transacaoRequest.getValorTransacao())
                 .tipoTransacao(TipoTransacao.RECEBIMENTO)
                 .contaOrigem(transacaoRequest.getIdContaOrigem())
+                .timestamp(OffsetDateTime.now())
                 .build();
     }
 }
