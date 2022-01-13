@@ -1,6 +1,7 @@
 package br.com.wallet.conta.resources.conta;
 
 import br.com.wallet.conta.entity.conta.ContaRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -14,5 +15,5 @@ public interface ContaController {
     @ApiOperation(value = "Criação de nova conta.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping
-    ResponseEntity<Void> criarConta(@RequestBody final ContaRequest contaRequest) throws NoSuchAlgorithmException;
+    ResponseEntity<Void> criarConta(@RequestBody final ContaRequest contaRequest) throws NoSuchAlgorithmException, JsonProcessingException;
 }

@@ -1,14 +1,17 @@
 package br.com.wallet.conta.publisher;
 
 import br.com.wallet.conta.publisher.event.TransacaoEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
+import static br.com.wallet.conta.constants.RabbitmqConstants.EXCHANGE_NAME;
+import static br.com.wallet.conta.constants.RabbitmqConstants.ROUTING_KEY;
 
 @Component
 @RequiredArgsConstructor
@@ -18,14 +21,9 @@ public class RabbitMqPublisher {
     private final ApplicationEventPublisher publisher;
 
     @Async
-    public void enviarRabbitMQ(TransacaoEvent mensagem) {
+    public void enviarRabbitMQ(TransacaoEvent mensagem) throws JsonProcessingException {
         log.info("Enviando mensagem {}", mensagem);
-        this.publisher.publishEvent(mensagem);
-        this.template.convertAndSend("mensagem");
+        this.template.convertAndSend(EXCHANGE_NAME, ROUTING_KEY, new ObjectMapper().writeValueAsString(mensagem));
     }
 
-    @RabbitListener(queues = "transacao-service-queue")
-    public void teste(@Payload TransacaoEvent mensagem) {
-        log.info("mensagem {}", mensagem);
-    }
 }
