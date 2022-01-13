@@ -26,5 +26,4 @@ public class ContaEntity {
     private BigDecimal saldo;
     private StatusConta statusConta;
     private String numeroConta;
-    private String operacao;
 }
