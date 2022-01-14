@@ -6,9 +6,10 @@ import br.com.wallet.conta.entity.agencia.AgenciaResponse;
 import br.com.wallet.conta.mapper.AgenciaMapper;
 import br.com.wallet.conta.repository.AgenciaRepository;
 import br.com.wallet.conta.service.AgenciaService;
-import br.com.wallet.conta.utils.ContaUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -26,5 +27,10 @@ public class AgenciaServiceImpl implements AgenciaService {
 
         this.repository.save(agencia);
         return this.mapper.paraResponse(agencia);
+    }
+
+    @Override
+    public Page<AgenciaResponse> encontrarAgencias(Pageable pageable) {
+        return this.repository.findAll(pageable).map(this.mapper::paraResponse);
     }
 }

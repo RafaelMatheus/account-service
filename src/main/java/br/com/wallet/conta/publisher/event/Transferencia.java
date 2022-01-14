@@ -10,5 +10,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class Transferencia extends TransacaoEvent {
-    private Long contaDestino;
+    private String contaDestino;
+    private String agenciaDestino;
 }

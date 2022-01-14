@@ -18,7 +18,8 @@ import java.time.OffsetDateTime;
 public class TransacaoEvent {
     private TipoTransacao tipoTransacao;
     private BigDecimal valorDebitado;
-    private Long contaOrigem;
+    private String contaOrigem;
+    private String agenciaOrigem;
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime timestamp;
 }

@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransacaoRequest {
-    private Long idContaOrigem;
+    private ContaTransacaoRequest contaOrigem;
     private TipoTransacao tipoTransacao;
     private BigDecimal valorTransacao;
-    private Long idContaDestino;
+    private ContaTransacaoRequest contaDestino;
 }

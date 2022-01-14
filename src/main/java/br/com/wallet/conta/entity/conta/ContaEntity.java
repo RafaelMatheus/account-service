@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity(name = "conta")
 @Data
@@ -25,5 +26,8 @@ public class ContaEntity {
     private String idUsuario;
     private BigDecimal saldo;
     private StatusConta statusConta;
+    @Column(unique = true)
     private String numeroConta;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataAtualizacao;
 }

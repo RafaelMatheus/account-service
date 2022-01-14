@@ -12,6 +12,6 @@ public class ContaUtils {
     public static String gerarNumeroAleatorio(int tamanho) throws NoSuchAlgorithmException {
         LocalDateTime now = LocalDateTime.now();
 
-        return now.toString().substring(0, tamanho);
+        return now.toString().substring(now.toString().indexOf(".") + 1);
     }
 }

@@ -13,7 +13,6 @@ import java.security.NoSuchAlgorithmException;
 @Mapper(imports = ContaUtils.class)
 public interface ContaMapper {
     @Mappings({
-            @Mapping(source = "idAgencia", target = "agencia.id"),
             @Mapping(target = "numeroConta", expression = "java(ContaUtils.gerarNumeroAleatorio(5))")
     })
     ContaEntity paraContaEntity(ContaRequest conta) throws NoSuchAlgorithmException;

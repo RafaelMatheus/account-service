@@ -1,15 +1,13 @@
-package br.com.wallet.conta.entity.conta;
+package br.com.wallet.conta.entity.transacao;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContaRequest {
+public class ContaTransacaoRequest {
+    private String numeroConta;
     private String numeroAgencia;
-    private String cpfUsuario;
 }
