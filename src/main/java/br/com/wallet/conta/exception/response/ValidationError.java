@@ -5,14 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@Data
+import java.util.List;
+
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
 @SuperBuilder
-public class StandardError {
-    private Long timestamp;
-    private Integer status;
-    private String error;
-    private String message;
-    private String path;
+public class ValidationError extends StandardError {
+    private List<FieldMessage> fieldMessages;
 }

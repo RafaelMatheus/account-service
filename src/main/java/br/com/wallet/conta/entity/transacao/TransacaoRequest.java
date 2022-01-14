@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Builder
@@ -13,8 +15,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransacaoRequest {
+    @Valid
     private ContaTransacaoRequest contaOrigem;
+    @NotNull
     private TipoTransacao tipoTransacao;
+    @NotNull
     private BigDecimal valorTransacao;
+    @Valid
     private ContaTransacaoRequest contaDestino;
 }

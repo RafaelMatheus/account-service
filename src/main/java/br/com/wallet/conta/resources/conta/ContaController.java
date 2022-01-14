@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 
 @Api(tags = "Contas API")
@@ -18,7 +19,7 @@ public interface ContaController {
     @ApiOperation(value = "Criação de nova conta.")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping
-    ResponseEntity<ContaResponse> criarConta(@RequestBody final ContaRequest contaRequest) throws NoSuchAlgorithmException, JsonProcessingException;
+    ResponseEntity<ContaResponse> criarConta(@RequestBody @Valid final ContaRequest contaRequest) throws NoSuchAlgorithmException, JsonProcessingException;
 
     @ApiOperation(value = "Obter todas as contas de uma agencia")
     @ResponseStatus(HttpStatus.OK)

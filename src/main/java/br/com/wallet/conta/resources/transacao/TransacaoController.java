@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 
 public interface TransacaoController {
     @ApiOperation(value = "Criação de uma nova agencia")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping
-    ResponseEntity<Void> realizarTransacao(@RequestBody final TransacaoRequest transacaoRequest) throws NoSuchAlgorithmException, JsonProcessingException;
+    ResponseEntity<Void> realizarTransacao(@RequestBody @Valid final TransacaoRequest transacaoRequest) throws NoSuchAlgorithmException, JsonProcessingException;
 }

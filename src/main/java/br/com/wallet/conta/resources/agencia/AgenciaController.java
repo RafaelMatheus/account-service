@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 
 public interface AgenciaController {
     @ApiOperation(value = "Criação de uma nova agencia")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping
-    ResponseEntity<AgenciaResponse> criarAgencia(@RequestBody final AgenciaRequest agenciaRequest) throws NoSuchAlgorithmException;
+    ResponseEntity<AgenciaResponse> criarAgencia(@RequestBody @Valid final AgenciaRequest agenciaRequest) throws NoSuchAlgorithmException;
 
     @ApiOperation(value = "Obter todas as agencias paginadas.")
     @ResponseStatus(HttpStatus.OK)

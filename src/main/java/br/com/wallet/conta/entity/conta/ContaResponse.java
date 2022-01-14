@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -13,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class ContaResponse {
     private StatusConta statusConta;
     private String numeroConta;
+    private BigDecimal saldo;
 }
