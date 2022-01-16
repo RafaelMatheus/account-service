@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class TransacaoRequest {
     @Valid
-    @NotNull
     private ContaTransacaoRequest contaOrigem;
     @NotNull
     private TipoTransacao tipoTransacao;

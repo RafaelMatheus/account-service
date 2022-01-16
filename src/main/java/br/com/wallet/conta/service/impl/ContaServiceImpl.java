@@ -10,18 +10,15 @@ import br.com.wallet.conta.mapper.ContaMapper;
 import br.com.wallet.conta.repository.AgenciaRepository;
 import br.com.wallet.conta.repository.ContaRepository;
 import br.com.wallet.conta.service.ContaService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static br.com.wallet.conta.constants.MessageConstants.*;
 
@@ -40,7 +37,7 @@ public class ContaServiceImpl implements ContaService {
     }
 
     @Override
-    public ContaResponse criarConta(ContaRequest contaRequest) throws NoSuchAlgorithmException, JsonProcessingException {
+    public ContaResponse criarConta(ContaRequest contaRequest) throws NoSuchAlgorithmException {
 
         ContaEntity contaMapper = this.mapper.paraContaEntity(contaRequest);
 
@@ -56,35 +53,52 @@ public class ContaServiceImpl implements ContaService {
         return this.mapper.paraResponse(salvo);
     }
 
-    @Override
-    @Transactional
-    public void realizarMovimentacaoConta(String numeroContaOrigem, String numeroContaDestino, BigDecimal valor) {
+    public void realizarTransferencia(String numeroContaOrigem, String numeroContaDestino, BigDecimal valor) {
+        ContaEntity contaOrigem = this.obterConta(numeroContaOrigem);
 
-        ContaEntity contaOrigem = this.repository.findByNumeroConta(numeroContaOrigem)
-                .orElseThrow(() -> new ObjetoConsultaNotFoundException(CONTA_NAO_ENCONTRADA));
-
-
-        if (this.podeRealizarOperacao(contaOrigem, valor)) {
+        if (this.podeRealizarOperacao(contaOrigem, valor))
             throw new SaldoInsufienteException(SALDO_INSUFICIENTE);
-        }
 
-        if (!Objects.isNull(numeroContaDestino)) {
-            ContaEntity destino = this.repository.findByNumeroConta(numeroContaDestino)
-                    .orElseThrow(() -> new ObjetoConsultaNotFoundException(CONTA_NAO_ENCONTRADA));
+        ContaEntity destino = this.obterConta(numeroContaDestino);
 
-            destino.setSaldo(destino.getSaldo().add(valor));
-            destino.setDataAtualizacao(LocalDateTime.now());
+        destino.setSaldo(destino.getSaldo().add(valor));
+        destino.setDataAtualizacao(LocalDateTime.now());
 
-            this.repository.save(destino);
-        }
+        this.repository.save(destino);
 
-        contaOrigem.setSaldo(contaOrigem.getSaldo().add(valor.multiply(BigDecimal.valueOf(-1))));
+        contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(valor));
         contaOrigem.setDataAtualizacao(LocalDateTime.now());
 
         this.repository.save(contaOrigem);
     }
 
+    public void realizarSaque(String numeroContaOrigem, BigDecimal valor) {
+        ContaEntity contaOrigem = obterConta(numeroContaOrigem);
+
+        if (this.podeRealizarOperacao(contaOrigem, valor))
+            throw new SaldoInsufienteException(SALDO_INSUFICIENTE);
+
+        contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(valor));
+        contaOrigem.setDataAtualizacao(LocalDateTime.now());
+
+        this.repository.save(contaOrigem);
+    }
+
+    public void realizarDeposito(String numeroContaDestino, BigDecimal valor) {
+        ContaEntity contaDestino = obterConta(numeroContaDestino);
+
+        contaDestino.setSaldo(contaDestino.getSaldo().add(valor));
+        contaDestino.setDataAtualizacao(LocalDateTime.now());
+
+        this.repository.save(contaDestino);
+    }
+
     private boolean podeRealizarOperacao(ContaEntity contaOrigem, BigDecimal valor) {
-        return contaOrigem.getSaldo().compareTo(BigDecimal.ZERO) == -1;
+        return contaOrigem.getSaldo().compareTo(valor) == -1;
+    }
+
+    private ContaEntity obterConta(String numeroContaOrigem) {
+        return this.repository.findByNumeroConta(numeroContaOrigem)
+                .orElseThrow(() -> new ObjetoConsultaNotFoundException(CONTA_NAO_ENCONTRADA));
     }
 }
