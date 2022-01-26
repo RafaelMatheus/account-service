@@ -12,7 +12,11 @@ import java.security.NoSuchAlgorithmException;
 public interface ContaService {
     ContaResponse criarConta(ContaRequest contaRequest) throws NoSuchAlgorithmException, JsonProcessingException;
 
-    void realizarMovimentacaoConta(String numeroContaOrigem, String numeroContaDestino, BigDecimal valor);
-
     Page<ContaResponse> encontrarContaPorAgencia(Pageable pageable, String numeroAgencia);
+
+    void realizarDeposito(String numeroContaDestino, BigDecimal valor);
+
+    void realizarTransferencia(String numeroContaOrigem, String numeroContaDestino, BigDecimal valor);
+
+    void realizarSaque(String numeroContaOrigem, BigDecimal valor);
 }

@@ -33,16 +33,19 @@ public class TransacaoServiceImpl implements TransacaoService {
 
     @Transactional
     private void realizarMovimentacaoFincanceira(TransacaoRequest transacaoRequest) {
-        if (!transacaoRequest.getTipoTransacao().equals(TipoTransacao.SAQUE)) {
-            this.service.realizarMovimentacaoConta(transacaoRequest.getContaOrigem().getNumeroConta(),
+
+        if (transacaoRequest.getTipoTransacao().equals(TipoTransacao.SAQUE))
+            this.service.realizarSaque(transacaoRequest.getContaOrigem().getNumeroConta(),
+                    transacaoRequest.getValorTransacao());
+
+        else if (transacaoRequest.getTipoTransacao().equals(TipoTransacao.TRANSFERENCIA))
+            this.service.realizarTransferencia(transacaoRequest.getContaOrigem().getNumeroConta(),
                     transacaoRequest.getContaDestino().getNumeroConta(),
                     transacaoRequest.getValorTransacao());
-            return;
-        }
 
-        this.service.realizarMovimentacaoConta(transacaoRequest.getContaOrigem().getNumeroConta(),
-                null,
-                transacaoRequest.getValorTransacao());
+        else if (transacaoRequest.getTipoTransacao().equals(TipoTransacao.DEPOSITO))
+            this.service.realizarDeposito(transacaoRequest.getContaDestino().getNumeroConta(),
+                    transacaoRequest.getValorTransacao());
     }
 
     private TransacaoEvent transacaoEventFactory(TransacaoRequest transacaoRequest) {
@@ -72,8 +75,6 @@ public class TransacaoServiceImpl implements TransacaoService {
                 .valorDebitado(transacaoRequest.getValorTransacao())
                 .contaDestino(transacaoRequest.getContaDestino().getNumeroConta())
                 .agenciaDestino(transacaoRequest.getContaDestino().getNumeroAgencia())
-                .contaOrigem(transacaoRequest.getContaOrigem().getNumeroConta())
-                .agenciaOrigem(transacaoRequest.getContaOrigem().getNumeroAgencia())
                 .timestamp(OffsetDateTime.now())
                 .build();
 

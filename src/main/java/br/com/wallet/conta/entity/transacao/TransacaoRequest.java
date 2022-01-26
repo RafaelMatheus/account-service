@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -20,6 +21,7 @@ public class TransacaoRequest {
     @NotNull
     private TipoTransacao tipoTransacao;
     @NotNull
+    @Min(1)
     private BigDecimal valorTransacao;
     @Valid
     private ContaTransacaoRequest contaDestino;

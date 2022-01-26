@@ -44,7 +44,6 @@ public class SwaggerConfiguration {
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
                 .title("Serviço de conta")
-                .description("Serviço relacionado a operações entre contas.")
                 .build();
     }
 
